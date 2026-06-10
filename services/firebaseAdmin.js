@@ -34,7 +34,14 @@ function initFirebase() {
       console.log('✅ Firebase Admin: initialized from service-account.json');
     } else if (process.env.FIREBASE_PROJECT_ID) {
       // ── Option B: environment variables ───────────────────────────────
-      const privateKey = (process.env.FIREBASE_PRIVATE_KEY || '').replace(/\\n/g, '\n');
+      const privateKey = (process.env.FIREBASE_PRIVATE_KEY || '')
+        .replace(/\\n/g, '\n')   // Convert literal \n to real newlines
+        .replace(/^"/, '')       // Strip a leading double quote if present
+        .replace(/"$/, '')       // Strip a trailing double quote if present
+        .replace(/^'/, '')       // Strip a leading single quote if present
+        .replace(/'$/, '')       // Strip a trailing single quote if present
+        .trim();                 // Clean up stray spaces
+
       initializeApp({
         credential: cert({
           projectId:   process.env.FIREBASE_PROJECT_ID,
