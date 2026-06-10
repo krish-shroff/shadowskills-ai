@@ -8,14 +8,15 @@ import { getAuth }                     from "https://www.gstatic.com/firebasejs/
 import { getFirestore }                from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 import { getAnalytics, isSupported }   from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
 
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey:            "AIzaSyAGawiLdC44L2O1IZ49HLPCyTXuNNFOO5A",
-  authDomain:        "my-first-project-1f4bd.firebaseapp.com",
-  projectId:         "my-first-project-1f4bd",
-  storageBucket:     "my-first-project-1f4bd.firebasestorage.app",
-  messagingSenderId: "933393557814",
-  appId:             "1:933393557814:web:481359882ee1bcaf25ab97",
-  measurementId:     "G-9EVZDLX79P"
+  apiKey: "AIzaSyBcfj0mwXVkQwIcr3RkVDI8HWo94ObF8IY",
+  authDomain: "shadowskills-ai-a26e8.firebaseapp.com",
+  projectId: "shadowskills-ai-a26e8",
+  storageBucket: "shadowskills-ai-a26e8.firebasestorage.app",
+  messagingSenderId: "610174676187",
+  appId: "1:610174676187:web:198c79e423c2dea2b670fe",
+  measurementId: "G-NG6LZB0FYX"
 };
 
 export const app  = initializeApp(firebaseConfig);
