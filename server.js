@@ -1,3 +1,16 @@
+// ── DIAGNOSTIC ERROR CATCHERS ──────────────────────────────────────
+process.on('uncaughtException', (err) => {
+  console.error('💥 CRITICAL UNCAUGHT EXCEPTION:', err.message);
+  console.error(err.stack);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.error('💥 CRITICAL UNHANDLED REJECTION:', reason);
+  process.exit(1);
+});
+// ───────────────────────────────────────────────────────────────────
+
 require('dotenv').config();
 const express = require('express');
 const cors    = require('cors');
@@ -48,18 +61,6 @@ app.get('*', (req, res) => {
   else res.status(404).json({ error: 'Page not found' });
 });
 
-// ── Start (Local Development Only) ─────────────────────────────────────────
-if (process.env.NODE_ENV !== 'production' && !process.env.FUNCTIONS_EMULATOR && !process.env.FIREBASE_CONFIG) {
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => {
-    console.log(`\n🌟 ShadowSkills AI`);
-    console.log(`🚀 Server:    http://localhost:${PORT}`);
-    console.log(`📊 Dashboard: http://localhost:${PORT}/dashboard.html`);
-    console.log(`🔬 Analyze:   http://localhost:${PORT}/analyze.html`);
-    console.log(`🔥 Database:  Firebase Firestore\n`);
-  });
-}
-
 // ── Export as Firebase Cloud Function ──────────────────────────────────────
 const { onRequest } = require('firebase-functions/v2/https');
 exports.api = onRequest({
@@ -67,3 +68,15 @@ exports.api = onRequest({
   maxInstances: 10,
   memory: '256MiB'
 }, app);
+
+// ── Unified Server Listener (Works on Render & Local) ──────────────────────
+// Render passes a dynamic port via process.env.PORT. Fallback to 5000 locally.
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`\n🌟 ShadowSkills AI Backend Active`);
+  console.log(`🚀 Server listening on host 0.0.0.0 and port ${PORT}`);
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`📊 Local Dashboard: http://localhost:${PORT}/dashboard.html`);
+  }
+});
