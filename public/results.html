@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analysis Results — ShadowSkills AI</title>
+  <meta name="description" content="Your complete AI-powered skill analysis results, including Shadow Score, hidden skills, and career recommendations." />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌟</text></svg>" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="/" class="nav-logo">Shadow<span>Skills</span></a>
+      <div class="nav-actions">
+        <a href="/analyze.html" class="btn btn-ghost btn-sm">🔬 New Analysis</a>
+        <a href="/roadmap.html" class="btn btn-primary btn-sm">🗺️ Roadmap</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main style="padding-top: 90px; padding-bottom: var(--space-3xl); min-height: 100vh;">
+    <div class="container">
+
+      <!-- Page Header -->
+      <div style="margin-bottom: var(--space-2xl); padding-top: var(--space-xl);">
+        <div class="hero-badge" style="display: inline-flex; margin-bottom: var(--space-md);">
+          <span id="ai-badge-icon">✨</span>
+          <span id="ai-badge-text">AI-Powered Results</span>
+        </div>
+        <h1 style="font-size: clamp(2rem, 4vw, 2.8rem);">Your <span class="gradient-text">Analysis Results</span></h1>
+        <p style="color: var(--text-secondary); margin-top: var(--space-sm);" id="result-timestamp">Generated just now</p>
+      </div>
+
+      <!-- TOP ROW: Score + Personality -->
+      <div class="grid-2 mb-xl" style="align-items: start;">
+
+        <!-- Shadow Score Card -->
+        <div class="card" style="padding: var(--space-xl); background: linear-gradient(135deg, rgba(124,58,237,0.12) 0%, rgba(6,182,212,0.06) 100%); border-color: rgba(124,58,237,0.25);">
+          <h2 style="font-size: 0.87rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: var(--space-xl);">🌟 Shadow Score™</h2>
+          <div class="score-gauge-wrap">
+            <div class="score-gauge">
+              <svg viewBox="0 0 200 200">
+                <defs>
+                  <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#7c3aed;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:1" />
+                  </linearGradient>
+                </defs>
+                <circle class="gauge-bg" cx="100" cy="100" r="90"/>
+                <circle class="gauge-fill" id="gauge-fill" cx="100" cy="100" r="90"/>
+              </svg>
+              <div class="gauge-center">
+                <div class="gauge-score" id="gauge-score">0</div>
+                <div class="gauge-label">/ 100</div>
+              </div>
+            </div>
+          </div>
+          <div style="text-align: center; margin-top: var(--space-lg);">
+            <div style="display: flex; justify-content: center; gap: var(--space-md); flex-wrap: wrap;">
+              <div id="strengths-pills" style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Personality Card -->
+        <div class="personality-card">
+          <span class="personality-emoji" id="personality-emoji">🧠</span>
+          <div class="personality-type" id="personality-type">Analyzing...</div>
+          <p class="personality-text" id="personality-text">Processing your profile...</p>
+          <div class="divider"></div>
+          <div style="display: flex; flex-direction: column; gap: var(--space-md);">
+            <div>
+              <div style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: var(--space-sm);">💪 Core Strengths</div>
+              <div id="strengths-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+            </div>
+            <div>
+              <div style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: var(--space-sm);">📈 Growth Areas</div>
+              <div id="improvements-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SKILLS BREAKDOWN -->
+      <div class="mb-xl">
+        <h2 style="font-size: 1.3rem; margin-bottom: var(--space-lg);">📊 Skills Breakdown</h2>
+        <div class="grid-2" style="align-items: start;">
+          <!-- Radar Chart -->
+          <div class="card" style="padding: var(--space-xl);">
+            <h3 style="font-size: 0.9rem; margin-bottom: var(--space-lg); color: var(--text-secondary);">Skill Radar</h3>
+            <canvas id="radar-chart" style="max-height: 300px;"></canvas>
+          </div>
+          <!-- Skill Bars -->
+          <div class="card" style="padding: var(--space-xl);">
+            <h3 style="font-size: 0.9rem; margin-bottom: var(--space-lg); color: var(--text-secondary);">Category Overview</h3>
+            <div id="skill-bars"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DETAILED SKILLS TABS -->
+      <div class="mb-xl">
+        <h2 style="font-size: 1.3rem; margin-bottom: var(--space-lg);">🛠️ Detailed Skills</h2>
+        <div class="card" style="padding: var(--space-xl);">
+          <div style="display: flex; gap: var(--space-sm); flex-wrap: wrap; margin-bottom: var(--space-xl);">
+            <button class="roadmap-tab active" id="skills-tab-technical" onclick="showSkillTab('technical')">💻 Technical</button>
+            <button class="roadmap-tab" id="skills-tab-interpersonal" onclick="showSkillTab('interpersonal')">🤝 Interpersonal</button>
+            <button class="roadmap-tab" id="skills-tab-leadership" onclick="showSkillTab('leadership')">👑 Leadership</button>
+            <button class="roadmap-tab" id="skills-tab-creative" onclick="showSkillTab('creative')">🎨 Creative</button>
+            <button class="roadmap-tab" id="skills-tab-problemSolving" onclick="showSkillTab('problemSolving')">🧩 Problem Solving</button>
+          </div>
+          <div id="detailed-skills-content">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- HIDDEN SKILLS -->
+      <div class="mb-xl">
+        <div class="flex justify-between items-center mb-lg">
+          <h2 style="font-size: 1.3rem;">✨ Hidden Skills Discovered</h2>
+          <div class="badge badge-purple">AI Inferred</div>
+        </div>
+        <p style="color: var(--text-secondary); margin-bottom: var(--space-lg); font-size: 0.9rem;">
+          These skills were <strong>not explicitly mentioned</strong> in your input — our AI inferred them from context and patterns in your experience.
+        </p>
+        <div id="hidden-skills-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-md);">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+
+      <!-- CAREER RECOMMENDATIONS -->
+      <div class="mb-xl">
+        <h2 style="font-size: 1.3rem; margin-bottom: var(--space-lg);">🎯 Career Recommendations</h2>
+        <div id="career-grid" style="display: flex; flex-direction: column; gap: var(--space-lg);">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+
+      <!-- SKILL GAP ANALYSIS -->
+      <div class="mb-xl" id="skill-gap-section">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:var(--space-lg);">
+          <h2 style="font-size:1.3rem;">🎯 Skill Gap Analysis</h2>
+          <div class="badge badge-amber">Dream Career</div>
+        </div>
+        <div id="skill-gap-content">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+
+      <!-- FUTURE SELF -->
+      <div class="mb-xl" id="future-self-section">
+        <h2 style="font-size:1.3rem;margin-bottom:var(--space-lg);">🔮 Future Self Prediction</h2>
+        <div id="future-self-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--space-md);">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+
+      <!-- GROWTH PREDICTION -->
+      <div class="mb-xl">
+        <h2 style="font-size: 1.3rem; margin-bottom: var(--space-lg);">🔮 Growth Prediction</h2>
+        <div class="card" style="padding: var(--space-xl); background: linear-gradient(135deg, rgba(6,182,212,0.08) 0%, rgba(124,58,237,0.08) 100%); border-color: rgba(6,182,212,0.2);">
+          <div style="display: flex; align-items: flex-start; gap: var(--space-lg);">
+            <div style="font-size: 3rem; flex-shrink: 0;">🚀</div>
+            <div>
+              <h3 style="margin-bottom: var(--space-md); color: var(--cyan-lt);">Your Growth Trajectory</h3>
+              <p id="growth-prediction" style="color: var(--text-secondary); line-height: 1.8; font-size: 0.95rem;">Loading prediction...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-section" style="padding: var(--space-xl) 0;">
+        <div class="cta-card">
+          <div class="cta-glow"></div>
+          <h2 class="cta-title">Ready to <span class="gradient-text">Follow Your Roadmap</span>?</h2>
+          <p class="cta-subtitle">View your personalized 3/6/12 month development plan and start your growth journey today.</p>
+          <div style="display: flex; gap: var(--space-md); justify-content: center; flex-wrap: wrap;">
+            <a href="/roadmap.html" class="btn btn-primary btn-lg">🗺️ View My Roadmap</a>
+            <a href="/analyze.html" class="btn btn-secondary btn-lg">🔬 New Analysis</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/results.js"></script>
+</body>
+</html>

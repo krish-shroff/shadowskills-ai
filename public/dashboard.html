@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — ShadowSkills AI</title>
+  <meta name="description" content="Your ShadowSkills AI personal dashboard — track your analyses and skill growth." />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌟</text></svg>" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- DASHBOARD LAYOUT -->
+  <div style="margin-top: 70px;">
+
+    <!-- Top Navbar -->
+    <nav class="navbar" id="navbar">
+      <div class="container">
+        <div class="nav-inner">
+          <a href="/" class="nav-logo">
+            <div class="logo-icon">🌟</div>
+            <span class="logo-text">Shadow<span>Skills</span> AI</span>
+          </a>
+          <div class="nav-actions">
+            <a href="/analyze.html" class="btn btn-primary btn-sm">+ New Analysis</a>
+            <button class="btn btn-ghost btn-sm" id="logout-btn" onclick="logout()">Logout</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="dashboard-layout">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-user">
+          <div class="user-avatar" id="sidebar-avatar">?</div>
+          <div>
+            <div class="user-name" id="sidebar-name">Loading...</div>
+            <div class="user-email" id="sidebar-email">—</div>
+          </div>
+        </div>
+        <ul class="sidebar-nav">
+          <li><a href="/dashboard.html" class="active">📊 Overview</a></li>
+          <li><a href="/analyze.html">🔬 New Analysis</a></li>
+          <li><a href="#history" onclick="scrollToHistory()">📋 History</a></li>
+          <li><a href="/results.html" id="nav-results" style="display:none;">📈 Last Results</a></li>
+          <li><a href="/roadmap.html" id="nav-roadmap" style="display:none;">🗺️ My Roadmap</a></li>
+        </ul>
+        <div style="margin-top: auto; padding-top: var(--space-lg); border-top: 1px solid var(--color-border);">
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: var(--space-sm);">Powered by</div>
+          <div style="font-size: 0.87rem; font-weight: 600; color: var(--purple-lt);">✨ Gemini AI</div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="main-content">
+
+        <!-- Welcome Banner -->
+        <div style="margin-bottom: var(--space-xl);">
+          <h1 id="welcome-msg" style="font-size: 1.8rem; margin-bottom: 6px;">Welcome back! 👋</h1>
+          <p style="color: var(--text-secondary);">Here's your skills intelligence overview.</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid mb-xl">
+          <div class="stat-card">
+            <div class="stat-card-icon" style="background: rgba(124,58,237,0.15);">🌟</div>
+            <div class="stat-card-value gradient-text" id="stat-score">—</div>
+            <div class="stat-card-label">Best Shadow Score</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon" style="background: rgba(6,182,212,0.12);">🔬</div>
+            <div class="stat-card-value" id="stat-analyses" style="color: var(--cyan-lt);">—</div>
+            <div class="stat-card-label">Total Analyses</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon" style="background: rgba(245,158,11,0.12);">✨</div>
+            <div class="stat-card-value" id="stat-skills" style="color: var(--amber);">—</div>
+            <div class="stat-card-label">Skills Discovered</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon" style="background: rgba(16,185,129,0.12);">🎯</div>
+            <div class="stat-card-value" id="stat-careers" style="color: var(--green);">5</div>
+            <div class="stat-card-label">Career Matches</div>
+          </div>
+        </div>
+
+        <!-- No analyses state -->
+        <div id="no-analysis-state" style="display: none; text-align: center; padding: var(--space-3xl) var(--space-lg);">
+          <div style="font-size: 4rem; margin-bottom: var(--space-lg);">🔬</div>
+          <h2 style="margin-bottom: var(--space-md);">No analyses yet!</h2>
+          <p style="color: var(--text-secondary); margin-bottom: var(--space-xl);">Run your first analysis to discover your hidden skills and potential.</p>
+          <a href="/analyze.html" class="btn btn-primary btn-lg">Start My First Analysis →</a>
+        </div>
+
+        <!-- Dashboard Content (shown when analysis exists) -->
+        <div id="dashboard-content">
+
+          <!-- Grid: Score Gauge + Radar Chart -->
+          <div class="grid-2 mb-xl" style="align-items: start;">
+
+            <!-- Shadow Score Gauge -->
+            <div class="card card-glow" style="padding: var(--space-xl);">
+              <h2 style="font-size: 1rem; margin-bottom: var(--space-xl); color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">🌟 Shadow Score™</h2>
+              <div class="score-gauge-wrap">
+                <div class="score-gauge">
+                  <svg viewBox="0 0 200 200">
+                    <defs>
+                      <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:#7c3aed;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:1" />
+                      </linearGradient>
+                    </defs>
+                    <circle class="gauge-bg" cx="100" cy="100" r="90"/>
+                    <circle class="gauge-fill" id="gauge-fill" cx="100" cy="100" r="90"/>
+                  </svg>
+                  <div class="gauge-center">
+                    <div class="gauge-score" id="gauge-score">0</div>
+                    <div class="gauge-label">Shadow Score</div>
+                  </div>
+                </div>
+                <div id="personality-badge" style="text-align: center;">
+                  <div class="badge badge-purple" id="personality-type-badge">Analyzing...</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Radar Chart -->
+            <div class="card" style="padding: var(--space-xl);">
+              <h2 style="font-size: 1rem; margin-bottom: var(--space-lg); color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">📊 Skill Radar</h2>
+              <canvas id="radar-chart" style="max-height: 260px;"></canvas>
+            </div>
+          </div>
+
+          <!-- Top Career Matches -->
+          <div class="mb-xl">
+            <div class="flex justify-between items-center mb-lg">
+              <h2 style="font-size: 1.2rem;">🎯 Top Career Matches</h2>
+              <a href="/results.html" class="btn btn-ghost btn-sm">View All →</a>
+            </div>
+            <div id="career-cards" style="display: flex; flex-direction: column; gap: var(--space-md);">
+              <!-- Career cards injected by JS -->
+            </div>
+          </div>
+
+          <!-- Hidden Skills -->
+          <div class="mb-xl">
+            <div class="flex justify-between items-center mb-lg">
+              <h2 style="font-size: 1.2rem;">✨ Discovered Hidden Skills</h2>
+              <a href="/results.html" class="btn btn-ghost btn-sm">View All →</a>
+            </div>
+            <div id="hidden-skills-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-md);">
+              <!-- Hidden skill cards injected by JS -->
+            </div>
+          </div>
+
+          <!-- Analysis History -->
+          <div id="history">
+            <div class="flex justify-between items-center mb-lg">
+              <h2 style="font-size: 1.2rem;">📋 Analysis History</h2>
+              <a href="/analyze.html" class="btn btn-primary btn-sm">+ New Analysis</a>
+            </div>
+            <div id="history-list" style="display: flex; flex-direction: column; gap: var(--space-md);">
+              <!-- History items injected by JS -->
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

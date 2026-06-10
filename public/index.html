@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShadowSkills AI — Discover Your Hidden Potential</title>
+  <meta name="description" content="ShadowSkills AI uses advanced AI to uncover hidden skills, predict career growth, and generate your personalized development roadmap." />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌟</text></svg>" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="/" class="nav-logo">
+          <div class="logo-icon">🌟</div>
+          <span class="logo-text">Shadow<span>Skills</span> AI</span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="#about">About</a></li>
+        </ul>
+        <div class="nav-actions" id="nav-actions">
+          <a href="/login.html" class="btn btn-secondary btn-sm" id="nav-login-btn">Login</a>
+          <a href="/analyze.html" class="btn btn-primary btn-sm" id="nav-start-btn">Get Started</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <canvas id="particles-canvas"></canvas>
+      <div class="hero-glow-1"></div>
+      <div class="hero-glow-2"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span>✨</span>
+        <span>AI-Powered Career Intelligence</span>
+      </div>
+      <h1 class="hero-title">
+        Uncover Your<br>
+        <span class="gradient-text">Hidden Skills</span><br>
+        &amp; True Potential
+      </h1>
+      <p class="hero-subtitle">
+        ShadowSkills AI analyzes your activities, experiences, and resume to reveal the skills you didn't know you had — and maps the path to your dream career.
+      </p>
+      <div class="hero-actions">
+        <a href="/analyze.html" class="btn btn-primary btn-lg" id="hero-cta-btn">
+          <span>🔬</span>
+          <span>Analyze My Skills</span>
+        </a>
+        <a href="#how-it-works" class="btn btn-secondary btn-lg">
+          <span>▶</span>
+          <span>See How It Works</span>
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="stat-number" data-target="50000">0</div>
+          <div class="stat-label">Skills Discovered</div>
+        </div>
+        <div class="hero-stat">
+          <div class="stat-number" data-target="12000">0</div>
+          <div class="stat-label">Careers Mapped</div>
+        </div>
+        <div class="hero-stat">
+          <div class="stat-number" data-target="98">0</div>
+          <div class="stat-label">% Accuracy Rate</div>
+        </div>
+        <div class="hero-stat">
+          <div class="stat-number" data-target="5">0</div>
+          <div class="stat-label">Sec Analysis Time</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="section-tag">⚡ Core Features</div>
+        <h2 class="section-title">
+          Everything You Need to<br>
+          <span class="gradient-text">Unlock Your Potential</span>
+        </h2>
+        <p class="section-subtitle">
+          Powered by Gemini AI — the most advanced career intelligence platform available.
+        </p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card fade-in">
+          <div class="feature-icon purple">🧠</div>
+          <h3 class="feature-title">AI-Powered Skill Detection</h3>
+          <p class="feature-desc">Our AI reads between the lines of your experiences to identify skills you've developed but never recognized — technical, interpersonal, creative, and more.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon cyan">📄</div>
+          <h3 class="feature-title">Resume & Activity Analysis</h3>
+          <p class="feature-desc">Upload your resume (PDF, DOCX, TXT) or describe your activities. Our AI extracts deep insights from every word.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon amber">🎯</div>
+          <h3 class="feature-title">Career Recommendation Engine</h3>
+          <p class="feature-desc">Get ranked career matches with match percentages, salary ranges, growth rates, and exactly what skills you need to bridge the gap.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon green">📊</div>
+          <h3 class="feature-title">Interactive Skill Radar</h3>
+          <p class="feature-desc">Visualize your skill profile across 5 dimensions with beautiful interactive radar charts and animated progress bars.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon pink">🔮</div>
+          <h3 class="feature-title">Shadow Score™</h3>
+          <p class="feature-desc">Your unique capability index (0-100) that summarizes your overall professional potential based on AI analysis of your complete profile.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon cyan">🗺️</div>
+          <h3 class="feature-title">Development Roadmap</h3>
+          <p class="feature-desc">Get a personalized 3-month, 6-month, and 1-year roadmap with specific goals, resources, and milestones to reach your dream career.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how-it-works" style="background: rgba(255,255,255,0.01);">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="section-tag">🚀 Process</div>
+        <h2 class="section-title">How <span class="gradient-text">ShadowSkills</span> Works</h2>
+        <p class="section-subtitle">Four simple steps to discover your hidden potential.</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card fade-in">
+          <div class="step-number">1</div>
+          <h3 class="step-title">Input Your Story</h3>
+          <p class="step-desc">Describe your activities, hobbies, and experiences — or upload your resume directly.</p>
+        </div>
+        <div class="step-card fade-in">
+          <div class="step-number">2</div>
+          <h3 class="step-title">AI Analysis</h3>
+          <p class="step-desc">Gemini AI deep-analyzes your content to extract both explicit and hidden skills within seconds.</p>
+        </div>
+        <div class="step-card fade-in">
+          <div class="step-number">3</div>
+          <h3 class="step-title">Discover Your Profile</h3>
+          <p class="step-desc">See your Shadow Score, skill breakdown, personality insights, and hidden talents revealed.</p>
+        </div>
+        <div class="step-card fade-in">
+          <div class="step-number">4</div>
+          <h3 class="step-title">Follow Your Roadmap</h3>
+          <p class="step-desc">Get a personalized development plan with career matches, skill gaps, and step-by-step milestones.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="container">
+      <div class="grid-2 items-center gap-lg">
+        <div class="fade-in">
+          <div class="section-tag">📋 About</div>
+          <h2 class="section-title" style="text-align: left;">
+            Built for<br><span class="gradient-text">Everyone</span>
+          </h2>
+          <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: var(--space-lg);">
+            Whether you're a student figuring out your path, a professional considering a career change, or a lifelong learner — ShadowSkills AI helps you understand your true potential and take confident, informed steps forward.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: var(--space-md);">
+            <div style="display: flex; gap: var(--space-md); align-items: flex-start;">
+              <span style="font-size: 1.3rem;">🎓</span>
+              <div>
+                <div style="font-weight: 700; margin-bottom: 4px;">Students</div>
+                <div style="font-size: 0.87rem; color: var(--text-secondary);">Discover career options that match your unique strengths before graduating.</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: var(--space-md); align-items: flex-start;">
+              <span style="font-size: 1.3rem;">💼</span>
+              <div>
+                <div style="font-weight: 700; margin-bottom: 4px;">Professionals</div>
+                <div style="font-size: 0.87rem; color: var(--text-secondary);">Identify transferable skills and find your next big career move.</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: var(--space-md); align-items: flex-start;">
+              <span style="font-size: 1.3rem;">🔄</span>
+              <div>
+                <div style="font-weight: 700; margin-bottom: 4px;">Career Changers</div>
+                <div style="font-size: 0.87rem; color: var(--text-secondary);">See how your existing skills map to entirely new industries.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="fade-in" style="display: flex; flex-direction: column; gap: var(--space-md);">
+          <div class="card card-glow" style="padding: var(--space-xl);">
+            <div style="font-size: 2rem; margin-bottom: var(--space-md);">🌟</div>
+            <div style="font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; margin-bottom: var(--space-sm);">Shadow Score™</div>
+            <p style="font-size: 0.87rem; color: var(--text-secondary);">A composite score from 0-100 measuring your overall professional capability — unique to ShadowSkills AI.</p>
+          </div>
+          <div class="card" style="padding: var(--space-xl);">
+            <div style="font-size: 2rem; margin-bottom: var(--space-md);">✨</div>
+            <div style="font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; margin-bottom: var(--space-sm);">Hidden Skill Detection</div>
+            <p style="font-size: 0.87rem; color: var(--text-secondary);">AI finds skills implied by your experiences that you've never explicitly claimed — your true hidden potential.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="cta">
+    <div class="container">
+      <div class="cta-card fade-in">
+        <div class="cta-glow"></div>
+        <h2 class="cta-title">Ready to <span class="gradient-text">Discover Yourself</span>?</h2>
+        <p class="cta-subtitle">Join thousands who have already uncovered their hidden potential. Free to start, no credit card required.</p>
+        <div style="display: flex; gap: var(--space-md); justify-content: center; flex-wrap: wrap;">
+          <a href="/analyze.html" class="btn btn-primary btn-lg" id="cta-analyze-btn">
+            <span>🔬</span> Start Free Analysis
+          </a>
+          <a href="/login.html" class="btn btn-secondary btn-lg">
+            <span>👤</span> Create Account
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-logo">
+        🌟 Shadow<span style="color: var(--purple-lt);">Skills</span> AI
+      </div>
+      <div class="footer-links">
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="/analyze.html">Analyze</a>
+        <a href="/login.html">Login</a>
+        <a href="/dashboard.html">Dashboard</a>
+      </div>
+      <p class="footer-copy">Built for HACKATHON 2024 · ShadowSkills AI · Powered by Gemini AI</p>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

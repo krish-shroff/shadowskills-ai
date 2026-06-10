@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Discover Your Skills — ShadowSkills AI</title>
+  <meta name="description" content="Answer 18 smart questions and let AI uncover your hidden skills, personality, and ideal career path."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/style.css"/>
+  <style>
+    /* ─── Wizard Shell ──────────────────────────────────── */
+    .wizard-wrap {
+      min-height: 100vh;
+      padding: 100px 20px 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .wizard-header {
+      text-align: center;
+      margin-bottom: 40px;
+      max-width: 620px;
+    }
+    .wizard-header h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin-bottom: 10px; }
+    .wizard-header p  { color: var(--text-secondary); font-size: 1rem; }
+
+    /* ─── Progress Bar ──────────────────────────────────── */
+    .progress-wrap {
+      width: 100%; max-width: 680px;
+      margin-bottom: 36px;
+    }
+    .progress-meta {
+      display: flex; justify-content: space-between;
+      font-size: 0.8rem; color: var(--text-muted);
+      margin-bottom: 10px; font-weight: 600;
+    }
+    .progress-track {
+      height: 6px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-fill-bar {
+      height: 100%;
+      background: var(--grad-primary);
+      border-radius: 99px;
+      transition: width 0.5s cubic-bezier(.4,0,.2,1);
+    }
+    .step-dots {
+      display: flex; gap: 8px; justify-content: center; margin-top: 12px;
+    }
+    .step-dot {
+      width: 8px; height: 8px; border-radius: 99px;
+      background: rgba(255,255,255,0.12);
+      transition: all 0.35s ease;
+    }
+    .step-dot.active  { background: var(--purple); width: 24px; }
+    .step-dot.done    { background: var(--green); }
+
+    /* ─── Wizard Card ───────────────────────────────────── */
+    .wizard-card {
+      width: 100%; max-width: 680px;
+      background: var(--bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: 44px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.35);
+      backdrop-filter: blur(12px);
+    }
+    @media (max-width: 600px) { .wizard-card { padding: 28px 20px; } }
+
+    /* ─── Section Header ────────────────────────────────── */
+    .section-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--purple-lt);
+      margin-bottom: 6px;
+    }
+    .wizard-question {
+      font-size: 1.35rem; font-weight: 700;
+      line-height: 1.4; margin-bottom: 8px;
+    }
+    .wizard-hint {
+      font-size: 0.85rem; color: var(--text-muted);
+      margin-bottom: 28px; line-height: 1.5;
+    }
+
+    /* ─── Inputs ────────────────────────────────────────── */
+    .wiz-input, .wiz-textarea, .wiz-select {
+      width: 100%;
+      padding: 13px 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      font-family: var(--font-body);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .wiz-input:focus, .wiz-textarea:focus, .wiz-select:focus {
+      border-color: var(--purple);
+      background: rgba(124,58,237,0.06);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
+    }
+    .wiz-input::placeholder, .wiz-textarea::placeholder { color: var(--text-muted); }
+    .wiz-textarea { min-height: 110px; resize: vertical; line-height: 1.6; }
+    .wiz-select { cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' fill='none' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 16px center;
+      padding-right: 40px;
+    }
+    .wiz-select option { background: #1a1a2e; }
+
+    /* ─── Chip Selector ─────────────────────────────────── */
+    .chips {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      margin-bottom: 8px;
+    }
+    .chip {
+      padding: 9px 18px;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-full);
+      font-size: 0.88rem; font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+      background: rgba(255,255,255,0.03);
+      color: var(--text-secondary);
+    }
+    .chip:hover { border-color: var(--purple); color: var(--purple-lt); background: rgba(124,58,237,0.08); }
+    .chip.selected {
+      background: rgba(124,58,237,0.2);
+      border-color: var(--purple);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(124,58,237,0.25);
+    }
+
+    /* ─── Radio-card ────────────────────────────────────── */
+    .radio-cards { display: flex; flex-direction: column; gap: 12px; }
+    .radio-card {
+      display: flex; align-items: center; gap: 16px;
+      padding: 15px 18px;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: rgba(255,255,255,0.02);
+    }
+    .radio-card:hover { border-color: var(--purple); background: rgba(124,58,237,0.06); }
+    .radio-card.selected {
+      border-color: var(--purple);
+      background: rgba(124,58,237,0.12);
+      box-shadow: 0 0 16px rgba(124,58,237,0.2);
+    }
+    .radio-card-icon { font-size: 1.4rem; width: 36px; text-align: center; flex-shrink: 0; }
+    .radio-card-text { font-size: 0.92rem; font-weight: 600; }
+    .radio-card-sub  { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+    .radio-dot {
+      width: 18px; height: 18px; border-radius: 50%;
+      border: 2px solid var(--color-border);
+      margin-left: auto; flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+    .radio-card.selected .radio-dot {
+      background: var(--purple);
+      border-color: var(--purple);
+      box-shadow: 0 0 8px rgba(124,58,237,0.5);
+    }
+
+    /* ─── Split grid ────────────────────────────────────── */
+    .split-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 500px) { .split-2 { grid-template-columns: 1fr; } }
+
+    /* ─── File Drop Zone ────────────────────────────────── */
+    .drop-zone {
+      border: 2px dashed var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 40px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      background: rgba(255,255,255,0.02);
+    }
+    .drop-zone:hover, .drop-zone.drag-over {
+      border-color: var(--purple);
+      background: rgba(124,58,237,0.07);
+    }
+    .drop-zone-icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .drop-zone-title { font-weight: 700; margin-bottom: 6px; }
+    .drop-zone-sub   { font-size: 0.83rem; color: var(--text-muted); }
+    .file-preview {
+      display: none;
+      align-items: center; gap: 14px;
+      padding: 16px 20px;
+      background: rgba(16,185,129,0.08);
+      border: 1px solid rgba(16,185,129,0.25);
+      border-radius: var(--radius-md);
+      margin-top: 14px;
+    }
+    .file-preview.show { display: flex; }
+    .file-preview-icon { font-size: 1.8rem; }
+    .file-name { font-weight: 700; font-size: 0.9rem; }
+    .file-size { font-size: 0.78rem; color: var(--text-muted); }
+    .file-remove { margin-left: auto; cursor: pointer; color: var(--text-muted); font-size: 1.1rem; }
+    .file-remove:hover { color: #f87171; }
+
+    /* ─── Navigation buttons ────────────────────────────── */
+    .wiz-nav {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 36px; gap: 12px;
+    }
+    .wiz-skip { font-size: 0.82rem; color: var(--text-muted); cursor: pointer; text-decoration: underline; }
+    .wiz-skip:hover { color: var(--text-secondary); }
+
+    /* ─── Char counter ──────────────────────────────────── */
+    .char-counter { text-align: right; font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; }
+
+    /* ─── Loading Overlay ───────────────────────────────── */
+    .loading-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(10,10,18,0.97);
+      flex-direction: column; align-items: center; justify-content: center;
+      gap: 24px;
+    }
+    .loading-overlay.show { display: flex; }
+    .loading-title {
+      font-family: var(--font-display); font-size: 1.6rem; font-weight: 800;
+      background: var(--grad-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .loading-steps { display: flex; flex-direction: column; gap: 10px; width: 340px; }
+    .loading-step {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      font-size: 0.88rem; color: var(--text-muted);
+      transition: all 0.4s ease;
+    }
+    .loading-step.active {
+      background: rgba(124,58,237,0.12);
+      border-color: rgba(124,58,237,0.3);
+      color: var(--text-primary);
+    }
+    .loading-step.done { color: var(--green); border-color: rgba(16,185,129,0.2); }
+    .step-icon { font-size: 1.1rem; width: 24px; text-align: center; }
+    .spin-ring {
+      width: 56px; height: 56px;
+      border: 3px solid rgba(124,58,237,0.2);
+      border-top-color: #7c3aed;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeInUp {
+      from { opacity:0; transform:translateY(16px); }
+      to   { opacity:1; transform:none; }
+    }
+    .sub-q { margin-top: 18px; }
+    .sub-label { font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: .05em; }
+    .optional-tag { font-size:0.75rem; color:var(--text-muted); font-weight:400; text-transform:none; letter-spacing:0; margin-left:6px; }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo">Shadow<span>Skills</span></a>
+    <div class="nav-actions">
+      <a href="/login.html" class="btn btn-primary btn-sm" id="nav-login-btn">Sign In</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loading-overlay">
+  <div class="spin-ring"></div>
+  <div class="loading-title">Analyzing Your Profile…</div>
+  <div class="loading-steps">
+    <div class="loading-step" id="ls-1"><span class="step-icon">📋</span> Reading your answers</div>
+    <div class="loading-step" id="ls-2"><span class="step-icon">🧠</span> Mapping skills &amp; traits</div>
+    <div class="loading-step" id="ls-3"><span class="step-icon">✨</span> Uncovering hidden talents</div>
+    <div class="loading-step" id="ls-4"><span class="step-icon">🎯</span> Matching career paths</div>
+    <div class="loading-step" id="ls-5"><span class="step-icon">🗺️</span> Building your roadmap</div>
+  </div>
+</div>
+
+<!-- Wizard -->
+<div class="wizard-wrap">
+  <div class="wizard-header">
+    <p class="section-label">✦ Smart Skills Discovery</p>
+    <h1>Tell us about <span class="gradient-text">yourself</span></h1>
+    <p>We ask smart questions — not "what are your skills?" — and let AI figure that out from your real experiences.</p>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <div class="progress-meta">
+      <span id="step-label">Step 1 of 5 · About You</span>
+      <span id="step-pct">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill-bar" id="prog-bar" style="width:0%"></div></div>
+    <div class="step-dots">
+      <div class="step-dot active" id="dot-0"></div>
+      <div class="step-dot"        id="dot-1"></div>
+      <div class="step-dot"        id="dot-2"></div>
+      <div class="step-dot"        id="dot-3"></div>
+      <div class="step-dot"        id="dot-4"></div>
+    </div>
+  </div>
+
+  <!-- Card -->
+  <div class="wizard-card" id="wizard-card">
+
+    <!-- ═══════════════════════════════════ -->
+    <!-- STEP 0 · About You                  -->
+    <!-- ═══════════════════════════════════ -->
+    <div id="step-0">
+      <div class="section-label">👤 Section 1 — About You</div>
+      <div class="wizard-question">Let's start with the basics.</div>
+      <div class="wizard-hint">This helps us personalize everything for you.</div>
+
+      <div class="split-2" style="margin-bottom:18px;">
+        <div>
+          <div class="sub-label">Your Name</div>
+          <input class="wiz-input" id="q-name" type="text" placeholder="e.g. Arjun Sharma" autocomplete="given-name"/>
+        </div>
+        <div>
+          <div class="sub-label">Age <span class="optional-tag">(optional)</span></div>
+          <input class="wiz-input" id="q-age" type="number" placeholder="e.g. 21" min="10" max="99"/>
+        </div>
+      </div>
+
+      <div style="margin-bottom:18px;">
+        <div class="sub-label">Current Status</div>
+        <div class="chips" id="chips-status">
+          <div class="chip" data-val="School Student">🏫 School Student</div>
+          <div class="chip" data-val="College Student">🎓 College Student</div>
+          <div class="chip" data-val="Professional">💼 Professional</div>
+          <div class="chip" data-val="Freelancer">🧑‍💻 Freelancer</div>
+          <div class="chip" data-val="Entrepreneur">🚀 Entrepreneur</div>
+          <div class="chip" data-val="Job Seeker">🔍 Job Seeker</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:18px;">
+        <div class="sub-label">Dream Career</div>
+        <input class="wiz-input" id="q-dream" type="text" placeholder="e.g. Game Developer, Data Scientist, Designer…"/>
+      </div>
+
+      <div>
+        <div class="sub-label">Fields That Excite You <span class="optional-tag">(pick all that apply)</span></div>
+        <div class="chips" id="chips-fields">
+          <div class="chip" data-val="Technology">💻 Technology</div>
+          <div class="chip" data-val="Business">📊 Business</div>
+          <div class="chip" data-val="Design">🎨 Design</div>
+          <div class="chip" data-val="Healthcare">🏥 Healthcare</div>
+          <div class="chip" data-val="Finance">💰 Finance</div>
+          <div class="chip" data-val="Sports">⚽ Sports</div>
+          <div class="chip" data-val="Education">📚 Education</div>
+          <div class="chip" data-val="Arts & Media">🎬 Arts &amp; Media</div>
+          <div class="chip" data-val="Science">🔬 Science</div>
+          <div class="chip" data-val="Social Impact">🌍 Social Impact</div>
+        </div>
+      </div>
+
+      <div class="wiz-nav">
+        <div></div>
+        <button class="btn btn-primary" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════ -->
+    <!-- STEP 1 · Projects & Leadership      -->
+    <!-- ═══════════════════════════════════ -->
+    <div id="step-1" style="display:none;">
+      <div class="section-label">🏆 Section 2 — Your Experiences</div>
+      <div class="wizard-question">Describe a project you're proud of.</div>
+      <div class="wizard-hint">Doesn't have to be technical — a school event, a side hustle, a sports win, anything you worked hard on.</div>
+
+      <textarea class="wiz-textarea" id="q-project"
+        placeholder="e.g. I built a cricket score tracker app for my college team using Python and SQLite. We used it during an inter-college tournament and it saved hours of manual tracking…"
+        oninput="updateCount(this,'proj-count',600)"></textarea>
+      <div class="char-counter"><span id="proj-count">0</span>/600</div>
+
+      <div class="sub-q">
+        <div class="sub-label">How did you work on it?</div>
+        <div class="split-2">
+          <div class="radio-card" id="rc-alone" onclick="pickRadio('work-mode','alone','rc-alone','rc-team')">
+            <div class="radio-card-icon">🧍</div>
+            <div><div class="radio-card-text">Solo</div><div class="radio-card-sub">I did it myself</div></div>
+            <div class="radio-dot"></div>
+          </div>
+          <div class="radio-card" id="rc-team" onclick="pickRadio('work-mode','team','rc-team','rc-alone')">
+            <div class="radio-card-icon">👥</div>
+            <div><div class="radio-card-text">Team</div><div class="radio-card-sub">Collaborated with others</div></div>
+            <div class="radio-dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-q">
+        <div class="sub-label">What was your role? <span class="optional-tag">(optional)</span></div>
+        <input class="wiz-input" id="q-role" type="text" placeholder="e.g. Team Lead, Backend Dev, Designer, Organizer…"/>
+      </div>
+
+      <div class="wiz-nav">
+        <button class="btn btn-ghost" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════ -->
+    <!-- STEP 2 · Leadership, Communication  -->
+    <!--          Creativity, Sports         -->
+    <!-- ═══════════════════════════════════ -->
+    <div id="step-2" style="display:none;">
+      <div class="section-label">⚡ Section 2 (cont.) — Leadership &amp; Skills</div>
+      <div class="wizard-question">What have you actually done?</div>
+      <div class="wizard-hint">Check everything that applies — we use this to detect skills you might not even realize you have.</div>
+
+      <!-- Leadership -->
+      <div style="margin-bottom:22px;">
+        <div class="sub-label">🏆 Leadership &amp; Organization</div>
+        <div class="chips" id="chips-lead">
+          <div class="chip" data-val="Led a team">Led a team</div>
+          <div class="chip" data-val="Organized an event">Organized an event</div>
+          <div class="chip" data-val="Managed a project">Managed a project</div>
+          <div class="chip" data-val="Started a club/group">Started a club/group</div>
+          <div class="chip" data-val="None of these">None of these</div>
+        </div>
+      </div>
+
+      <!-- Communication -->
+      <div style="margin-bottom:22px;">
+        <div class="sub-label">🗣️ Communication &amp; Teaching</div>
+        <div class="chips" id="chips-comm">
+          <div class="chip" data-val="Taught someone a skill">Taught someone a skill</div>
+          <div class="chip" data-val="Mentored a peer">Mentored a peer</div>
+          <div class="chip" data-val="Gave a presentation">Gave a presentation</div>
+          <div class="chip" data-val="Participated in debates">Participated in debates</div>
+          <div class="chip" data-val="Public speaking">Public speaking</div>
+          <div class="chip" data-val="None of these">None of these</div>
+        </div>
+      </div>
+
+      <!-- Creativity -->
+      <div style="margin-bottom:22px;">
+        <div class="sub-label">🎨 Creative Work</div>
+        <div class="chips" id="chips-create">
+          <div class="chip" data-val="Apps or websites">Apps / Websites</div>
+          <div class="chip" data-val="Videos or films">Videos / Films</div>
+          <div class="chip" data-val="Design or artwork">Design / Artwork</div>
+          <div class="chip" data-val="Games">Games</div>
+          <div class="chip" data-val="Written content">Written Content</div>
+          <div class="chip" data-val="Music">Music</div>
+          <div class="chip" data-val="Photography">Photography</div>
+          <div class="chip" data-val="None of these">None of these</div>
+        </div>
+      </div>
+
+      <!-- Sports -->
+      <div>
+        <div class="sub-label">⚽ Sports &amp; Teams <span class="optional-tag">(optional)</span></div>
+        <div class="split-2">
+          <input class="wiz-input" id="q-sport" type="text" placeholder="Sport(s) you play…"/>
+          <select class="wiz-select" id="q-sport-role">
+            <option value="">Your role…</option>
+            <option value="Captain">Captain</option>
+            <option value="Vice-Captain">Vice-Captain</option>
+            <option value="Team Member">Team Member</option>
+            <option value="Coach / Trainer">Coach / Trainer</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="wiz-nav">
+        <button class="btn btn-ghost" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════ -->
+    <!-- STEP 3 · How You Think & Challenges -->
+    <!-- ═══════════════════════════════════ -->
+    <div id="step-3" style="display:none;">
+      <div class="section-label">🧠 Section 3 — How You Think</div>
+      <div class="wizard-question">Tell us about a real challenge you faced.</div>
+      <div class="wizard-hint">Not looking for a perfect answer — just your honest experience. This reveals your problem-solving style.</div>
+
+      <div style="margin-bottom:18px;">
+        <div class="sub-label">What was the challenge?</div>
+        <textarea class="wiz-textarea" id="q-challenge" style="min-height:90px;"
+          placeholder="e.g. Our college fest website crashed 2 hours before the event. I was the only one who could fix it…"
+          oninput="updateCount(this,'chal-count',400)"></textarea>
+        <div class="char-counter"><span id="chal-count">0</span>/400</div>
+      </div>
+
+      <div style="margin-bottom:28px;">
+        <div class="sub-label">How did you handle it?</div>
+        <textarea class="wiz-textarea" id="q-solution" style="min-height:90px;"
+          placeholder="e.g. I stayed calm, rolled back to the previous build using Git, identified the breaking change, and fixed it in 45 minutes…"
+          oninput="updateCount(this,'sol-count',400)"></textarea>
+        <div class="char-counter"><span id="sol-count">0</span>/400</div>
+      </div>
+
+      <div style="margin-bottom:22px;">
+        <div class="sub-label">When facing a challenge, your first instinct is to…</div>
+        <div class="radio-cards">
+          <div class="radio-card" onclick="pickSingle(this,'challenge-approach')">
+            <div class="radio-card-icon">🔍</div>
+            <div><div class="radio-card-text">Research it thoroughly first</div></div>
+            <div class="radio-dot"></div>
+          </div>
+          <div class="radio-card" onclick="pickSingle(this,'challenge-approach')">
+            <div class="radio-card-icon">🧪</div>
+            <div><div class="radio-card-text">Dive in and experiment</div></div>
+            <div class="radio-dot"></div>
+          </div>
+          <div class="radio-card" onclick="pickSingle(this,'challenge-approach')">
+            <div class="radio-card-icon">🤝</div>
+            <div><div class="radio-card-text">Collaborate &amp; ask for help</div></div>
+            <div class="radio-dot"></div>
+          </div>
+          <div class="radio-card" onclick="pickSingle(this,'challenge-approach')">
+            <div class="radio-card-icon">📐</div>
+            <div><div class="radio-card-text">Plan it out step-by-step</div></div>
+            <div class="radio-dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="sub-label">In a group project, you naturally…</div>
+        <div class="chips" id="chips-group-role">
+          <div class="chip" data-val="Organize and delegate">📋 Organize &amp; delegate</div>
+          <div class="chip" data-val="Generate ideas">💡 Generate ideas</div>
+          <div class="chip" data-val="Build the actual solution">🔨 Build the solution</div>
+          <div class="chip" data-val="Present and communicate">🎤 Present &amp; communicate</div>
+          <div class="chip" data-val="Support and help others">🤝 Support others</div>
+        </div>
+      </div>
+
+      <div class="wiz-nav">
+        <button class="btn btn-ghost" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════ -->
+    <!-- STEP 4 · Growth + Resume Upload     -->
+    <!-- ═══════════════════════════════════ -->
+    <div id="step-4" style="display:none;">
+      <div class="section-label">📈 Section 4 — Growth &amp; Goals</div>
+      <div class="wizard-question">What are you building toward?</div>
+      <div class="wizard-hint">Last few questions — then we reveal your full profile.</div>
+
+      <div style="margin-bottom:18px;">
+        <div class="sub-label">Which best describes you?</div>
+        <div class="radio-cards">
+          <div class="radio-card" onclick="pickSingle(this,'personality')">
+            <div class="radio-card-icon">👑</div>
+            <div><div class="radio-card-text">I enjoy leading people and driving decisions</div></div>
+            <div class="radio-dot"></div>
+          </div>
+          <div class="radio-card" onclick="pickSingle(this,'personality')">
+            <div class="radio-card-icon">🎨</div>
+            <div><div class="radio-card-text">I enjoy creating things — designs, apps, content</div></div>
+            <div class="radio-dot"></div>
+          </div>
+          <div class="radio-card" onclick="pickSingle(this,'personality')">
+            <div class="radio-card-icon">🔬</div>
+            <div><div class="radio-card-text">I enjoy analyzing data and solving complex problems</div></div>
+            <div class="radio-dot"></div>
+          </div>
+          <div class="radio-card" onclick="pickSingle(this,'personality')">
+            <div class="radio-card-icon">💚</div>
+            <div><div class="radio-card-text">I enjoy helping, teaching, and supporting others</div></div>
+            <div class="radio-dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="split-2" style="margin-bottom:18px;">
+        <div>
+          <div class="sub-label">Hours/week you spend learning</div>
+          <select class="wiz-select" id="q-hours">
+            <option value="">Select…</option>
+            <option value="Less than 2 hours">Less than 2 hrs</option>
+            <option value="2-5 hours">2–5 hrs</option>
+            <option value="5-10 hours">5–10 hrs</option>
+            <option value="10-20 hours">10–20 hrs</option>
+            <option value="More than 20 hours">20+ hrs</option>
+          </select>
+        </div>
+        <div>
+          <div class="sub-label">Skills you're currently learning</div>
+          <input class="wiz-input" id="q-learning" type="text" placeholder="e.g. React, Python, UI Design…"/>
+        </div>
+      </div>
+
+      <div style="margin-bottom:24px;">
+        <div class="sub-label">Your proudest achievement so far</div>
+        <textarea class="wiz-textarea" id="q-achievement" style="min-height:80px;"
+          placeholder="e.g. Won 2nd place at a national hackathon, published my first app, led a team of 15 for a college fest…"
+          oninput="updateCount(this,'ach-count',300)"></textarea>
+        <div class="char-counter"><span id="ach-count">0</span>/300</div>
+      </div>
+
+      <!-- Resume Upload -->
+      <div>
+        <div class="sub-label">Resume / Portfolio <span class="optional-tag">(optional but recommended)</span></div>
+        <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()"
+          ondragover="handleDrag(event,true)" ondragleave="handleDrag(event,false)" ondrop="handleDrop(event)">
+          <div class="drop-zone-icon">📄</div>
+          <div class="drop-zone-title">Drop your resume here or click to browse</div>
+          <div class="drop-zone-sub">PDF, DOCX, or TXT — max 5MB</div>
+          <input type="file" id="file-input" accept=".pdf,.docx,.doc,.txt" style="display:none"
+            onchange="handleFile(this.files[0])"/>
+        </div>
+        <div class="file-preview" id="file-preview">
+          <div class="file-preview-icon" id="fp-icon">📄</div>
+          <div>
+            <div class="file-name" id="fp-name">—</div>
+            <div class="file-size" id="fp-size">—</div>
+          </div>
+          <div class="file-remove" onclick="removeFile()" title="Remove">✕</div>
+        </div>
+      </div>
+
+      <div id="submit-alert" class="alert" style="display:none;"></div>
+
+      <div class="wiz-nav">
+        <button class="btn btn-ghost" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary btn-lg" id="analyze-btn" onclick="submitAnalysis()">
+          ✦ Reveal My Skills
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /wizard-card -->
+</div><!-- /wizard-wrap -->
+
+<script src="/js/main.js"></script>
+<script src="/js/analyze.js"></script>
+</body>
+</html>

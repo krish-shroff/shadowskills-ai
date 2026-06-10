@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Development Roadmap — ShadowSkills AI</title>
+  <meta name="description" content="Your personalized AI-generated 3, 6, and 12-month career development roadmap." />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌟</text></svg>" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="/" class="nav-logo">
+          <div class="logo-icon">🌟</div>
+          <span class="logo-text">Shadow<span>Skills</span> AI</span>
+        </a>
+        <div class="nav-actions">
+          <a href="/results.html" class="btn btn-secondary btn-sm">← Results</a>
+          <a href="/analyze.html" class="btn btn-primary btn-sm">+ New Analysis</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main style="padding-top: 90px; padding-bottom: var(--space-3xl); min-height: 100vh;">
+    <div class="container" style="max-width: 900px;">
+
+      <!-- Header -->
+      <div style="margin-bottom: var(--space-2xl); padding-top: var(--space-xl);">
+        <div class="hero-badge" style="display: inline-flex; margin-bottom: var(--space-md);">
+          <span>🗺️</span> <span>Personalized Development Plan</span>
+        </div>
+        <h1 style="font-size: clamp(2rem, 4vw, 2.8rem); margin-bottom: var(--space-md);">
+          Your <span class="gradient-text">Growth Roadmap</span>
+        </h1>
+        <p style="color: var(--text-secondary); font-size: 1.05rem; line-height: 1.7; max-width: 600px;">
+          A personalized step-by-step plan to bridge your skill gaps and reach your dream career, generated specifically for your profile.
+        </p>
+      </div>
+
+      <!-- Target Career Banner -->
+      <div id="target-career-banner" class="card" style="display: none; padding: var(--space-lg); margin-bottom: var(--space-xl); background: linear-gradient(135deg, rgba(124,58,237,0.15) 0%, rgba(6,182,212,0.08) 100%); border-color: rgba(124,58,237,0.3);">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-md);">
+          <div>
+            <div style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 4px;">🎯 Target Career</div>
+            <div id="target-career-name" style="font-family: var(--font-display); font-size: 1.3rem; font-weight: 700;"></div>
+          </div>
+          <div id="target-career-match" class="match-score"></div>
+        </div>
+      </div>
+
+      <!-- Phase Overview Cards -->
+      <div class="stats-grid mb-xl">
+        <div class="stat-card" style="cursor: pointer; transition: var(--transition-normal);" id="phase-card-3" onclick="switchPhase('threeMonth')">
+          <div class="stat-card-icon" style="background: rgba(124,58,237,0.15);">🌱</div>
+          <div class="stat-card-value" id="phase-3-count" style="color: var(--purple-lt);">—</div>
+          <div class="stat-card-label">3-Month Goals</div>
+        </div>
+        <div class="stat-card" id="phase-card-6" onclick="switchPhase('sixMonth')" style="cursor: pointer;">
+          <div class="stat-card-icon" style="background: rgba(6,182,212,0.12);">🌿</div>
+          <div class="stat-card-value" id="phase-6-count" style="color: var(--cyan-lt);">—</div>
+          <div class="stat-card-label">6-Month Goals</div>
+        </div>
+        <div class="stat-card" id="phase-card-12" onclick="switchPhase('oneYear')" style="cursor: pointer;">
+          <div class="stat-card-icon" style="background: rgba(16,185,129,0.12);">🌳</div>
+          <div class="stat-card-value" id="phase-12-count" style="color: var(--green);">—</div>
+          <div class="stat-card-label">1-Year Goals</div>
+        </div>
+      </div>
+
+      <!-- Phase Tabs -->
+      <div class="roadmap-tabs mb-xl">
+        <button class="roadmap-tab active" id="tab-threeMonth" onclick="switchPhase('threeMonth')">🌱 3 Months</button>
+        <button class="roadmap-tab" id="tab-sixMonth" onclick="switchPhase('sixMonth')">🌿 6 Months</button>
+        <button class="roadmap-tab" id="tab-oneYear" onclick="switchPhase('oneYear')">🌳 1 Year</button>
+      </div>
+
+      <!-- Phase Description -->
+      <div id="phase-desc" class="card" style="padding: var(--space-lg); margin-bottom: var(--space-xl); background: var(--color-card);">
+        <div id="phase-desc-text" style="font-size: 0.9rem; color: var(--text-secondary);"></div>
+      </div>
+
+      <!-- Timeline -->
+      <div id="roadmap-timeline" class="timeline">
+        <!-- Items injected by JS -->
+      </div>
+
+      <!-- No analysis state -->
+      <div id="no-roadmap-state" style="display: none; text-align: center; padding: var(--space-3xl);">
+        <div style="font-size: 4rem; margin-bottom: var(--space-lg);">🗺️</div>
+        <h2 style="margin-bottom: var(--space-md);">No roadmap yet</h2>
+        <p style="color: var(--text-secondary); margin-bottom: var(--space-xl);">Run an analysis first to generate your personalized development roadmap.</p>
+        <a href="/analyze.html" class="btn btn-primary btn-lg">🔬 Analyze My Skills →</a>
+      </div>
+
+      <!-- Skills to Focus On -->
+      <div id="focus-skills-section" style="margin-top: var(--space-2xl);">
+        <h2 style="font-size: 1.3rem; margin-bottom: var(--space-lg);">🎯 Skills to Focus On</h2>
+        <div id="focus-skills-grid" style="display: flex; flex-wrap: wrap; gap: var(--space-sm);">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+
+      <!-- Growth Prediction -->
+      <div id="growth-section" style="margin-top: var(--space-2xl);">
+        <h2 style="font-size: 1.3rem; margin-bottom: var(--space-lg);">🔮 Where You're Headed</h2>
+        <div class="card" style="padding: var(--space-xl); background: linear-gradient(135deg, rgba(124,58,237,0.08) 0%, rgba(6,182,212,0.05) 100%);">
+          <div style="display: flex; gap: var(--space-lg); align-items: flex-start;">
+            <div style="font-size: 3rem; flex-shrink: 0;">🚀</div>
+            <div>
+              <h3 style="color: var(--purple-lt); margin-bottom: var(--space-md);">Growth Prediction</h3>
+              <p id="growth-prediction-text" style="color: var(--text-secondary); line-height: 1.8;"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div style="text-align: center; margin-top: var(--space-2xl); padding: var(--space-xl) 0;">
+        <h2 style="font-size: 1.5rem; margin-bottom: var(--space-md);">Ready to <span class="gradient-text">Start Your Journey</span>?</h2>
+        <p style="color: var(--text-secondary); margin-bottom: var(--space-xl);">Your roadmap is ready. Take the first step today.</p>
+        <div style="display: flex; gap: var(--space-md); justify-content: center; flex-wrap: wrap;">
+          <a href="/analyze.html" class="btn btn-primary btn-lg">🔬 Run New Analysis</a>
+          <a href="/dashboard.html" class="btn btn-secondary btn-lg">📊 Dashboard</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/roadmap.js"></script>
+</body>
+</html>

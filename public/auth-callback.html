@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signing you in… — ShadowSkills AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a12;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .spinner {
+      width: 56px; height: 56px;
+      border: 3px solid rgba(124,58,237,0.2);
+      border-top-color: #7c3aed;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    p { color: #94a3b8; font-size: 1rem; }
+    .error { color: #f87171; text-align: center; max-width: 360px; line-height: 1.6; }
+    a { color: #7c3aed; text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="spinner" id="spinner"></div>
+  <p id="msg">Signing you in with Google…</p>
+
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const token  = params.get('token');
+      const user   = params.get('user');
+      const error  = params.get('error');
+
+      if (error) {
+        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('msg').className = 'error';
+        const msgs = {
+          google_failed:        'Google sign-in failed. Please try again.',
+          google_not_configured:'Google sign-in is not set up yet.<br>Please use email/password login.'
+        };
+        document.getElementById('msg').innerHTML =
+          (msgs[error] || 'Something went wrong.') +
+          '<br><br><a href="/login.html">← Back to Login</a>';
+        return;
+      }
+
+      if (token && user) {
+        try {
+          localStorage.setItem('token', token);
+          localStorage.setItem('user', decodeURIComponent(user));
+          window.location.replace('/dashboard.html');
+        } catch (e) {
+          document.getElementById('msg').textContent = 'Could not save session. ' + e.message;
+        }
+      } else {
+        window.location.replace('/login.html');
+      }
+    })();
+  </script>
+</body>
+</html>
